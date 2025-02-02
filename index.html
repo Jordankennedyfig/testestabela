@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de E-mails</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #eef1f7;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+        .checkbox {
+            width: 20px;
+        }
+        .action-buttons, .email-form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input, textarea {
+            display: block;
+            width: 100%;
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        let deletedEmails = [];
+        
+        function selectAll(source) {
+            let checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+        }
+        
+        function deleteSelected() {
+            let checkboxes = document.querySelectorAll('tbody input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                let row = checkbox.closest('tr');
+                deletedEmails.push(row.outerHTML);
+                row.remove();
+            });
+        }
+        
+        function undoDelete() {
+            let tbody = document.querySelector('tbody');
+            if (deletedEmails.length > 0) {
+                tbody.insertAdjacentHTML('beforeend', deletedEmails.pop());
+            }
+        }
+        
+        function sendEmail() {
+            let recipient = document.getElementById('recipient').value;
+            let subject = document.getElementById('subject').value;
+            let message = document.getElementById('message').value;
+            
+            if (recipient && subject && message) {
+                alert(`E-mail enviado para: ${recipient}\nAssunto: ${subject}\nMensagem: ${message}`);
+            } else {
+                alert("Por favor, preencha todos os campos para enviar o e-mail.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="email-form">
+            <h3>Enviar Novo E-mail</h3>
+            <input type="text" id="recipient" placeholder="Destinatário">
+            <input type="text" id="subject" placeholder="Assunto">
+            <textarea id="message" placeholder="Mensagem"></textarea>
+            <button onclick="sendEmail()">Enviar</button>
+        </div>
+        <div class="action-buttons">
+            <button onclick="deleteSelected()">Excluir Selecionados</button>
+            <button onclick="undoDelete()">Reverter Última Exclusão</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="checkbox"><input type="checkbox" onclick="selectAll(this)"></th>
+                    <th>Remetente</th>
+                    <th>Assunto</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>João Silva</td>
+                    <td>Reunião de amanhã</td>
+                    <td>01/02/2025</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>Maria Souza</td>
+                    <td>Relatório mensal</td>
+                    <td>31/01/2025</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>Carlos Lima</td>
+                    <td>Convite para evento</td>
+                    <td>30/01/2025</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
